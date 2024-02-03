@@ -19,11 +19,11 @@ public class Discount {
         this.priceForQuantity = priceForQuantity;
     }
 
-    int getDiscountQuantity() {
+    public int getDiscountQuantity() {
         return discountQuantity;
     }
 
-    BigDecimal getPriceForQuantity() {
+    public BigDecimal getPriceForQuantity() {
         return priceForQuantity;
     }
 

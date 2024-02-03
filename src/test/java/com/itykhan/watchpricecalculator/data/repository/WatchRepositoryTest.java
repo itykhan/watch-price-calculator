@@ -23,5 +23,4 @@ public class WatchRepositoryTest {
         assertNotNull(watches);
     }
 
-
 }
