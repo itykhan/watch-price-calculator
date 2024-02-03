@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,7 +22,8 @@ class WatchPriceCalculatorApplicationTests {
 	void calculateTotalPrice() {
 		ResultPrice resultPrice = watchService.calculateTotalPrice(
 				List.of("001", "002", "001", "004", "003"));
-		assertEquals(new BigDecimal(360), resultPrice.price());
+		assertEquals(new BigDecimal(360),
+				resultPrice.price().setScale(0, RoundingMode.UNNECESSARY));
 	}
 
 }

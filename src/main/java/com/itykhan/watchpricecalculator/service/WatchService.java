@@ -5,21 +5,23 @@ import com.itykhan.watchpricecalculator.data.WatchNotFoundException;
 import com.itykhan.watchpricecalculator.data.entity.Discount;
 import com.itykhan.watchpricecalculator.data.entity.Watch;
 import com.itykhan.watchpricecalculator.data.reporitory.WatchRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
 public class WatchService {
 
-    @Autowired
-    private WatchRepository watchRepository;
+    private final WatchRepository watchRepository;
+
+    public WatchService(WatchRepository watchRepository) {
+        this.watchRepository = watchRepository;
+    }
 
     public ResultPrice calculateTotalPrice(Collection<String> ids) {
 
@@ -30,20 +32,18 @@ public class WatchService {
         Map<String, Long> idToCountMap = ids.stream()
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
-        AtomicReference<BigDecimal> result = new AtomicReference<>(BigDecimal.ZERO);
-        idToCountMap.forEach((unitId, unitCount) ->
-                calculatePriceForUnit(result, unitId, unitCount));
+        Optional<BigDecimal> result = idToCountMap.entrySet().stream()
+                .map(entity -> calculatePriceForUnit(entity.getKey(), entity.getValue()))
+                .reduce(BigDecimal::add);
 
-        return new ResultPrice(result.get());
+        return new ResultPrice(result.orElse(BigDecimal.ZERO));
     }
 
-    private void calculatePriceForUnit(
-            AtomicReference<BigDecimal> result, String itemId, Long itemCount) {
+    private BigDecimal calculatePriceForUnit(String itemId, Long itemCount) {
 
         Watch watch = watchRepository.findById(itemId)
                 .orElseThrow(() -> new WatchNotFoundException(itemId));
 
-        BigDecimal totalPrice = result.get();
         if (watch.getDiscount() != null) {
 
             Discount discount = watch.getDiscount();
@@ -58,14 +58,11 @@ public class WatchService {
             BigDecimal priceForRemainingItems = watch.getPrice().multiply(itemCountWithoutDiscount);
 
             //
-            totalPrice = totalPrice.add(priceForItemsWithDiscount)
-                                   .add(priceForRemainingItems);
+            return priceForItemsWithDiscount.add(priceForRemainingItems);
 
-        } else {
-
-            totalPrice = totalPrice.add(watch.getPrice().multiply(new BigDecimal(itemCount)));
         }
 
-        result.set(totalPrice);
+        return watch.getPrice().multiply(new BigDecimal(itemCount));
+
     }
 }

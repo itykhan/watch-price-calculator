@@ -24,7 +24,7 @@ public class LoadDatabase {
                     new Watch("001", "Rolex", new BigDecimal(100),
                             new Discount(3, new BigDecimal(200)))));
             log.info("Preloading " + repository.save(
-                    new Watch("002", "Michael Kors", new BigDecimal(200),
+                    new Watch("002", "Michael Kors", new BigDecimal(80),
                             new Discount(2, new BigDecimal(120)))));
             log.info("Preloading " + repository.save(
                     new Watch("003", "Swatch", new BigDecimal(50), null)));
