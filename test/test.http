@@ -1,0 +1,11 @@
+POST http://localhost:8080/checkout
+Accept: application/json
+Content-Type: application/json
+
+[
+"001",
+"002",
+"001",
+"004",
+"003"
+]
