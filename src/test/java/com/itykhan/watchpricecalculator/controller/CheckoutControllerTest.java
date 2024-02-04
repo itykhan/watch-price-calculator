@@ -1,5 +1,6 @@
 package com.itykhan.watchpricecalculator.controller;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -11,12 +12,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class WatchControllerTest {
+public class CheckoutControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Test
+    @DisplayName("Testing successful POST request")
     public void testPostSuccess() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/checkout")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -32,6 +34,7 @@ public class WatchControllerTest {
     }
 
     @Test
+    @DisplayName("Testing POST request with a nonexistent watch ID")
     public void testPostWatchNotFound() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/checkout")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -41,6 +44,7 @@ public class WatchControllerTest {
     }
 
     @Test
+    @DisplayName("Testing POST request with empty IDs list")
     public void testPostEmptyContent() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/checkout")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -50,6 +54,7 @@ public class WatchControllerTest {
     }
 
     @Test
+    @DisplayName("Testing POST request without content")
     public void testPostWithoutContent() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/checkout")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -57,6 +62,7 @@ public class WatchControllerTest {
     }
 
     @Test
+    @DisplayName("Testing POST request with unsupported media type")
     public void testPostUnsupportedType() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/checkout")
                         .contentType(MediaType.APPLICATION_PDF))
@@ -64,6 +70,7 @@ public class WatchControllerTest {
     }
 
     @Test
+    @DisplayName("Testing unsupported GET request")
     public void testGet() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/checkout"))
                 .andExpect(MockMvcResultMatchers.status().is(405));

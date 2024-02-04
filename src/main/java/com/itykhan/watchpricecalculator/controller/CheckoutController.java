@@ -1,8 +1,7 @@
 package com.itykhan.watchpricecalculator.controller;
 
 import com.itykhan.watchpricecalculator.data.ResultPrice;
-import com.itykhan.watchpricecalculator.service.WatchService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.itykhan.watchpricecalculator.service.CheckoutService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,14 +9,18 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class WatchController {
+public class CheckoutController implements CheckoutApi {
 
-    @Autowired
-    private WatchService watchService;
+    private final CheckoutService checkoutService;
 
+    public CheckoutController(CheckoutService checkoutService) {
+        this.checkoutService = checkoutService;
+    }
+
+    @Override
     @PostMapping("/checkout")
     public ResultPrice calculatePrice(@RequestBody List<String> ids) {
-        return watchService.calculateTotalPrice(ids);
+        return checkoutService.calculateTotalPrice(ids);
     }
 
 }

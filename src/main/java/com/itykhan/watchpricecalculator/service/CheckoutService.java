@@ -15,11 +15,11 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
-public class WatchService {
+public class CheckoutService {
 
     private final WatchRepository watchRepository;
 
-    public WatchService(WatchRepository watchRepository) {
+    public CheckoutService(WatchRepository watchRepository) {
         this.watchRepository = watchRepository;
     }
 
